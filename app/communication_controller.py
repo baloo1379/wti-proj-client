@@ -38,7 +38,7 @@ def send_warming_up(idx):
 def send_result(idx, result):
     url = f"http://{SERVER_NAME}/job/{idx}"
     data = {
-        'status': 'finished',
+        'status': 'done',
         'result': result
     }
     r = requests.post(url, json=data)
@@ -46,6 +46,7 @@ def send_result(idx, result):
         return r.json()
     else:
         raise ConnectionError(f"Response from server: {r.status_code} {r.json().get('error')}")
+
 
 def send_error(idx):
     url = f"http://{SERVER_NAME}/job/{idx}"

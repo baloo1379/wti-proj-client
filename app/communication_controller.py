@@ -1,16 +1,16 @@
 import requests
+from dotenv import load_dotenv
+from os import getenv
+
+load_dotenv()
 
 
-SERVER_NAME = 'baloo.local'
+SERVER_NAME = getenv('SERVER_NAME', 'baloo.local')
+API_KEY = getenv('API_KEY', 'empty')
 
 
 def download_job() -> dict:
-    r"""
-    GET /job/queue
-
-    :return: dict: Data from server queue
-    """
-    url = f"http://{SERVER_NAME}/job/queue"
+    url = f"http://{SERVER_NAME}/job/queue?api_key={API_KEY}"
     r = requests.get(url)
     if r.status_code == 200:
         return r.json()
@@ -19,12 +19,7 @@ def download_job() -> dict:
 
 
 def send_warming_up(idx):
-    r"""
-    POST /job/<idx>
-
-    :return: bool:
-    """
-    url = f"http://{SERVER_NAME}/job/{idx}"
+    url = f"http://{SERVER_NAME}/job/{idx}?api_key={API_KEY}"
     data = {
         'status': 'warming up'
     }
@@ -36,7 +31,7 @@ def send_warming_up(idx):
 
 
 def send_result(idx, result):
-    url = f"http://{SERVER_NAME}/job/{idx}"
+    url = f"http://{SERVER_NAME}/job/{idx}?api_key={API_KEY}"
     data = {
         'status': 'done',
         'result': result
@@ -49,7 +44,7 @@ def send_result(idx, result):
 
 
 def send_error(idx):
-    url = f"http://{SERVER_NAME}/job/{idx}"
+    url = f"http://{SERVER_NAME}/job/{idx}?api_key={API_KEY}"
     data = {
         'status': 'failed',
     }
